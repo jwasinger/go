@@ -58,6 +58,9 @@ func dumpobj1(outfile string, mode int) {
 	defer bout.Close()
 	bout.WriteString("!<arch>\n")
 
+    fmt.Printf("---------------------------------------------------------------\n")
+    fmt.Printf("%s\n", outfile)
+
 	if mode&modeCompilerObj != 0 {
 		start := startArchiveEntry(bout)
 		dumpCompilerObj(bout)

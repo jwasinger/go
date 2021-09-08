@@ -319,6 +319,20 @@ func WriteExports(out io.Writer, extensions bool) {
 	hdr.uint64(uint64(p.strings.Len()))
 	hdr.uint64(dataLen)
 
+    fmt.Printf("iexportVersionCurrent: %d\n", iexportVersionCurrent)
+    fmt.Printf("strings len: %d\n", uint64(p.strings.Len()))
+    fmt.Printf("data len: %d\n", dataLen)
+    fmt.Printf("strings: \"")
+    fmt.Println(&p.strings)
+    fmt.Printf("\"\n")
+
+    outTmp := new(bytes.Buffer)
+    hTmp := md5.New()
+    wrTmp := io.MultiWriter(outTmp, hTmp)
+    dataCopy := bytes.NewBuffer(p.data0.Bytes())
+    io.Copy(wrTmp, dataCopy)
+    fmt.Printf("data hash: %x\n", hTmp.Sum(nil)[:])
+
 	// Flush output.
 	h := md5.New()
 	wr := io.MultiWriter(out, h)
@@ -329,6 +343,8 @@ func WriteExports(out io.Writer, extensions bool) {
 	// Add fingerprint (used by linker object file).
 	// Attach this to the end, so tools (e.g. gcimporter) don't care.
 	copy(base.Ctxt.Fingerprint[:], h.Sum(nil)[:])
+    fmt.Printf("pkghash: %x\n", base.Ctxt.Fingerprint[:])
+    fmt.Println("\n")
 	out.Write(base.Ctxt.Fingerprint[:])
 }
 
