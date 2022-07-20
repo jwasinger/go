@@ -219,6 +219,10 @@ func (z nat) montgomery(x, y, m nat, k Word, n int) nat {
 	}
 	z = z.make(n * 2)
 	z.clear()
+    if n < 12 {
+        montgomeryFixedWidth[n - 1](z, x, y, m, k)
+        return z
+    }
 	var c Word
 	for i := 0; i < n; i++ {
 		d := y[i]
